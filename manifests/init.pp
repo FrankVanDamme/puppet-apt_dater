@@ -47,6 +47,10 @@ class apt_dater () {
 
     if ( $::osfamily == "Debian" ){
 
+	package { "apt-dater-host":
+	    ensure => present,
+	}
+
 	$sectname = "$apptier-$role"
 	
 	@@apt_dater::section { "$::fqdn": 
