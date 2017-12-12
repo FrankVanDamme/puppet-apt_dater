@@ -47,7 +47,7 @@ class apt_dater () {
 
     if ( $::osfamily == "Debian" ){
 
-	$sectname = "$environment-$role"
+	$sectname = "$apptier-$role"
 	
 	@@apt_dater::section { "$::fqdn": 
 	    sectname => "$sectname",
