@@ -57,13 +57,13 @@ class apt_dater () {
 	    sectname => "$sectname",
 	}
 
-	@@concat::fragment { "$::fqdn":
+	@@concat::fragment { "apt_dater_host_$::fqdn":
 	    target  => "/root/.config/apt-dater/hosts.conf",
 	    content => "$::fqdn;",
 	    tag     => $sectname,
 	    order   => "${sectname}1",
 	}
     } else {
-	notice ("Operating system must run APT!")
+	info ("Operating system must run APT!")
     }
 }
