@@ -5,5 +5,9 @@ class apt_dater::server {
 
     Apt_dater::Section <<| |>>
 
+    file { "/root/.config/apt-dater":
+	ensure => directory,
+    }
+
     concat { "/root/.config/apt-dater/hosts.conf": }
 }
