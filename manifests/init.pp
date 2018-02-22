@@ -51,19 +51,30 @@ class apt_dater () {
 	    ensure => present,
 	}
 
-	$sectname = "$apptier-$role"
-	
-	@@apt_dater::section { "$::fqdn": 
-	    sectname => "$sectname",
+    } elsif ( $::osfamily == "RedHat" ){
+
+	file { "/usr/local/bin/apt-dater-host":
+	    ensure         => present,
+	    checksum       => "sha256",
+	    mode           => "u+x",
+	    checksum_value => "f564ccbd89d1deffac4828876131759e5f4e9430cc5b9d4b619b9fce23ed0f9a",
+	    source         => "https://raw.githubusercontent.com/DE-IBH/apt-dater-host/7f477950bc2538ca309e3d5002b31021e0c694a9/yum/apt-dater-host",
 	}
 
-	@@concat::fragment { "apt_dater_host_$::fqdn":
-	    target  => "/root/.config/apt-dater/hosts.conf",
-	    content => "$::fqdn;",
-	    tag     => $sectname,
-	    order   => "${sectname}1",
-	}
     } else {
-	info ("Operating system must run APT!")
+	fail ("apt-dater: operating system not supported!")
+    }
+
+    $sectname = "$apptier-$role"
+
+    @@apt_dater::section { "$::fqdn": 
+	sectname => "$sectname",
+    }
+
+    @@concat::fragment { "apt_dater_host_$::fqdn":
+	target  => "/root/.config/apt-dater/hosts.conf",
+	content => "$::fqdn;",
+	tag     => $sectname,
+	order   => "${sectname}1",
     }
 }
