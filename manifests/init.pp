@@ -66,15 +66,16 @@ class apt_dater () {
     }
 
     $sectname = "$apptier-$role"
+    $fragment_tag = "env_$environment-sect_$sectname"
 
     @@apt_dater::section { "$::fqdn": 
 	sectname => "$sectname",
     }
 
     @@concat::fragment { "apt_dater_host_$::fqdn":
-	target  => "/root/.config/apt-dater/hosts.conf",
-	content => "$::fqdn;",
-	tag     => $sectname,
-	order   => "${sectname}1",
+        target  => "/root/.config/apt-dater/hosts.conf",
+        content => "$::fqdn;",
+        tag    => [ "env_$environment", $sectname ],
+        order   => "${sectname}1",
     }
 }
