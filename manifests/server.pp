@@ -3,8 +3,8 @@ class apt_dater::server {
     $hosts_conf_root = "/root/.config/apt-dater/hosts.conf"
     $hosts_xml_root = "/root/.config/apt-dater/hosts.xml"
 
-    package { "apt-dater": 
-	ensure => present,
+    package { "apt-dater":
+        ensure => present,
     } -> file { $cnf_sys:
         content => template("$module_name/apt-dater.xml.system.erb"),
     }
@@ -12,7 +12,7 @@ class apt_dater::server {
     Apt_dater::Section <<| |>>
 
     file { "/root/.config/apt-dater":
-	ensure => directory,
+        ensure => directory,
     }
 
     concat { $hosts_conf_root: } 
