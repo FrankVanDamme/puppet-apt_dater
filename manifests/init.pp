@@ -43,33 +43,36 @@
 # Copyright 2017 Your name here, unless otherwise noted.
 #
 
-class apt_dater () {
+class apt_dater (
+    $proxy = undef,
+) {
 
     if ( $::osfamily == "Debian" ){
 
-	package { "apt-dater-host":
-	    ensure => present,
-	}
+        package { "apt-dater-host":
+            ensure => present,
+        }
 
     } elsif ( $::osfamily == "RedHat" ){
 
-	file { "/usr/local/bin/apt-dater-host":
-	    ensure         => present,
-	    checksum       => "sha256",
-	    mode           => "u+x",
-	    checksum_value => "f564ccbd89d1deffac4828876131759e5f4e9430cc5b9d4b619b9fce23ed0f9a",
-	    source         => "https://raw.githubusercontent.com/DE-IBH/apt-dater-host/7f477950bc2538ca309e3d5002b31021e0c694a9/yum/apt-dater-host",
-	}
+        remote_file { "/usr/local/bin/apt-dater-host":
+            ensure        => present,
+            checksum_type => "sha256",
+            mode          => "u+x",
+            checksum      => "f564ccbd89d1deffac4828876131759e5f4e9430cc5b9d4b619b9fce23ed0f9a",
+            source        => "https://raw.githubusercontent.com/DE-IBH/apt-dater-host/7f477950bc2538ca309e3d5002b31021e0c694a9/yum/apt-dater-host",
+            proxy         => $proxy,
+        }
 
     } else {
-	fail ("apt-dater: operating system not supported!")
+        fail ("apt-dater: operating system not supported!")
     }
 
     $sectname = "$apptier-$role"
     $fragment_tag = "env_$environment-sect_$sectname"
 
     @@apt_dater::section { "$::fqdn": 
-	sectname => "$sectname",
+        sectname => "$sectname",
     }
 
     @@concat::fragment { "apt_dater_host_$::fqdn":
