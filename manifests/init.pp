@@ -47,13 +47,13 @@ class apt_dater (
     $proxy = undef,
 ) {
 
-    if ( $::osfamily == "Debian" ){
+    if ( $facts[os][family] == "Debian" ){
 
         package { "apt-dater-host":
             ensure => present,
         }
 
-    } elsif ( $::osfamily == "RedHat" ){
+    } elsif ( $facts[os][family] == "RedHat" ){
 
         remote_file { "/usr/local/bin/apt-dater-host":
             ensure        => present,
@@ -71,14 +71,14 @@ class apt_dater (
     $sectname = "$apptier-$role"
     $fragment_tag = "env_$environment-sect_$sectname"
 
-    @@apt_dater::section { "$::fqdn": 
+    @@apt_dater::section { "${facts[networking][fqdn]}":
         sectname => "$sectname",
     }
 
-    @@concat::fragment { "apt_dater_host_$::fqdn":
+    @@concat::fragment { "apt_dater_host_${facts[networking][fqdn]}":
         target  => "/root/.config/apt-dater/hosts.conf",
-        content => "$::fqdn;",
-        tag    => [ "env_$environment", $sectname ],
+        content => "${facts[networking][fqdn]};",
+        tag     => [ "env_$environment", $sectname ],
         order   => "${sectname}1",
     }
 }
